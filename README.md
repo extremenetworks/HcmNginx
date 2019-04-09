@@ -1,0 +1,1 @@
+# Hybrid Cloud Manager - Nginx - Acts as an API gateway/router for now

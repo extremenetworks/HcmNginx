@@ -1,0 +1,42 @@
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hcm-portal
+  namespace: default
+  labels:
+    app: hcm-portal
+spec:
+  ports:
+  - name: tcp-web
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: hcm-portal
+  type: LoadBalancer
+---
+# Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hcm-portal
+  namespace: default
+  labels:
+    app: hcm-portal
+spec:
+  template:
+    metadata:
+      labels:
+        app: hcm-portal
+    spec:
+      containers:
+      - name: hcm-portal
+        image: kurts/hcm_portal
+        lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+      imagePullSecrets:
+      - name: regcred
+---
