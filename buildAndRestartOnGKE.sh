@@ -21,3 +21,12 @@ docker push kurts/hcm_nginx:latest
 # Re-create the deployment on GKE
 echo -e "$(date +%T.%3N) ${GREEN}Deploying the new image on GKE${NC}"
 kubectl apply -f kube_deploy.yaml
+
+# Wait for Kubernetes to deploy the new image
+sleepTime=120
+echo -e "$(date +%T.%3N) ${GREEN}Sleeping for $sleepTime seconds before attaching to container logs${NC}"
+sleep $sleepTime
+
+# Attach to the new container's log output
+kubectl logs -f $(kubectl get pod -l app=hcm-nginx -o jsonpath="{.items[0].metadata.name}") -c hcm-nginx
+
